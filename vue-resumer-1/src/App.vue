@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
-    <Topbar class="topbar"></Topbar>
+  <div id="app" v-bind:class="{previewMode:previewMode}">
+    <Topbar class="topbar" v-on:preview="preview"></Topbar>
     <main>
-      <Editor class="editor"></Editor>
-      <Preview class="preview"></Preview>
+      <Editor v-bind:resume="resume" class="editor"></Editor>
+      <Preview v-bind:resume="resume" class="preview"></Preview>
 
     </main>
-
+    <el-button id="exitPreview" v-on:click="exitPreview"> 退出预览</el-button>
   </div>
 </template>
 
@@ -16,6 +16,39 @@
   import Preview from './components/Preview'
 
   export default {
+    data() {
+
+      return {
+        previewMode: false,
+        resume: {
+          profile: {
+            name: '',
+            city: '',
+            birthday: ''
+          },
+          workHistory: [
+            {company: '', content: ''}
+          ],
+          studyHistory: [{school: '', duration: '', degree: ''}],
+          projects: [{name: '', content: ''}],
+          awards: [{name: ""}],
+          contacts: {
+            qq: '',
+            wechat: '',
+            email: '',
+            phone: ''
+          }
+        }
+      }
+    },
+    methods: {
+      preview() {
+        this.previewMode = true
+      },
+      exitPreview(){
+        this.previewMode = false
+      }
+    },
     components: {
       Preview,
       Editor,
@@ -44,12 +77,15 @@
     z-index: 1;
     box-shadow: 0 0 3px hsla(0, 0, 0, 0.5);
   }
+
   .icon {
-    width: 1em; height: 1em;
+    width: 1em;
+    height: 1em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
   }
+
   main {
 
     display: flex;
@@ -62,7 +98,7 @@
       background: white;
       box-shadow: 0 0 3px hsla(0, 0, 0, 0.5);
       border-radius: 4px;
-      overflow: auto;
+      overflow: hidden;
     }
 
     > .preview {
@@ -76,4 +112,27 @@
     }
   }
 
+  .previewMode > #topbar {
+    display: none;
+  }
+
+  .previewMode #editor {
+    display: none;
+  }
+
+  .previewMode #preview {
+    max-width: 800px;
+    margin: 32px auto;
+  }
+
+  #exitPreview {
+    display: none;
+  }
+
+  .previewMode #exitPreview {
+    display: inline-block;
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+  }
 </style>
